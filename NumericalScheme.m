@@ -1,3 +1,18 @@
+% This is a function to be called when running the numerical scheme. 
+
+% INPUTS:
+% f0 - vector that represents the starting function for the admissible
+% paths.
+% f1 - vector that represents that ending function for the admissible
+% paths. Should be the same size as f0. 
+
+% OUTPUTS:
+% finalPath - a struct with the fields f, v, z, that represent the last
+% path that is computed in the numerical scheme. 
+
+% PARAMETERS:
+% maxIterations - the maximum number of iterations that the scheme should
+% run through. Currently initialized on line 37. 
 
 function finalPath = NumericalScheme( f0, f1 )
 

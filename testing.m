@@ -1,3 +1,6 @@
+% A small script to test out the efficiency of using circshift for finite
+% differences compared to matrix multiplication. 
+
 function testing()
     k = 100;
     results = zeros(3, k);

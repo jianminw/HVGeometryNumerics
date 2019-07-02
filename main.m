@@ -1,3 +1,9 @@
+% A script wrapper for the rest of the functions, for ease of use. 
+% n is the number of intervals, both in time and space. 
+% f0 and f1 are the functions passed into the numerical scheme. 
+% The output a struct, with the field f, v, z corresponding to the past
+% path that was computed in the scheme. 
+
 n = 200;
 %f0 = sin( (0:n-1) / (n-1) * 2 * pi ) / 2;
 %f1 = cos( (0:n-1) / (n-1) * 2 * pi ) / 2;

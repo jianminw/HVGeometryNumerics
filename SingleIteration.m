@@ -1,5 +1,7 @@
 % This file contains a function that execute a single iteration of the 
 % numerical scheme. 
+% This file should be split into a number of smaller files/functions for
+% ease of reading/debugging. 
 
 % INPUTS: f 
 % OUTPUTS: f, v, z
