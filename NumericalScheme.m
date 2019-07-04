@@ -23,18 +23,21 @@ function finalPath = NumericalScheme( f0, f1 )
 timeSteps = length(f0);
 
 % Starting path is linear interpolation in time.
+% Only f is necessary here for the iterative scheme, but v and z are
+% included so that the action of this first path can be computed and
+% compared to that of later paths. 
 
 path = struct;
 path.f = LinearInterpolation( f0, f1, timeSteps);
 path.v = zeros(size(path.f));
-path.z = (f1 - f0)' * ones(1, timeSteps);
+path.z = (f1 - f0)' * ones(1, timeSteps+1); 
 disp(ComputeAction(path))
 
 % Now iterate the scheme. 
 % For a start, the stopping condition will just be a set number of 
 % iterations. 
 
-maxIterations = 6;
+maxIterations = 2;
 
 for i = 1:maxIterations
     %disp('iteration:')
