@@ -15,7 +15,7 @@
 % there were some errors that seem to be caused by passing the outputs out
 % as a struct, so they are passed out as a vector for now. 
 
-function [f, v, z] = SingleIteration(oldPath, f0, f1)
+function newPath = SingleIteration(oldPath, f0, f1)
 
 n = size(oldPath.f, 1);
 m = size(oldPath.f, 2);
@@ -137,8 +137,8 @@ for i = 1:n
     %disp(s)
     s = s / timeSteps;
     %disp(s)
-    disp(size(f1))
-    disp(size(phi(:, 1)))
+    %disp(size(f1))
+    %disp(size(phi(:, 1)))
     C(i, i) = (interpOnS1( phi(:, 1) , f1', phi(i, timeSteps + 1) ) - f0(i) ) / s;
 end
 z_Phi = C * rho_Phi;
@@ -179,6 +179,11 @@ z = zeros(n, timeSteps + 1);
 for j = 1:(timeSteps + 1)
     z(:, j) = interpOnS1( phi(:, j), z_Phi(:, j), (0:n-1)/(n-1));
 end
+
+newPath.f = f;
+newPath.v = v;
+newPath.z = z;
+newPath.phi = phi;
 
 end
 

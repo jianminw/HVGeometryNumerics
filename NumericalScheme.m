@@ -37,15 +37,16 @@ disp(ComputeAction(path))
 % For a start, the stopping condition will just be a set number of 
 % iterations. 
 
-maxIterations = 2;
+maxIterations = 10;
 
 for i = 1:maxIterations
     %disp('iteration:')
     %disp(i)
-    [f, v, z] = SingleIteration(path, f0, f1);
-    newPath.f = f;
-    newPath.v = v;
-    newPath.z = z;
+    %[f, v, z] 
+    newPath = SingleIteration(path, f0, f1);
+    %newPath.f = f;
+    %newPath.v = v;
+    %newPath.z = z;
     %disp(f)
     %disp(z)
     
@@ -71,5 +72,6 @@ save('OptimalPath.mat', 'path')
 finalPath.f = path.f;
 finalPath.v = path.v;
 finalPath.z = path.z;
+finalPath.phi = path.phi;
 
 end
