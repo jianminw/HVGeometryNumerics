@@ -37,7 +37,7 @@ disp(ComputeAction(path))
 % For a start, the stopping condition will just be a set number of 
 % iterations. 
 
-maxIterations = 10;
+maxIterations = 50;
 
 for i = 1:maxIterations
     %disp('iteration:')

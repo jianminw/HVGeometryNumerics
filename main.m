@@ -8,9 +8,26 @@ n = 200;
 % Sine to cosine
 %f0 = sin( (1:n) / n * 2 * pi ) / 2;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
+
+% Sine to negative sine
+f0 = sin( (1:n) / n * 8 * pi ) / 2;
+f1 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
+
 % narrow bump to wide bump
-f0 = ( sin( (1:n) / n * pi ) ).^32;
-f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+%f0 = 5 * ( sin( (1:n) / n * pi ) ).^32;
+%f1 = 5 * ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+
+% small and large bumps 
+% similar in size
+%f0 = 1.2 * exp( - ((1:n) / n - 0.25).^2 * 100 ) + 0.8 * exp( - ((1:n) / n - 0.75).^2 * 100);
+%f1 = 0.8 * exp( - ((1:n) / n - 0.25).^2 * 100 ) + 1.2 * exp( - ((1:n) / n - 0.75).^2 * 100);
+
+% small and large bumps 
+% dissimilar in size
+%f0 = 1 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 0.2 * exp( - ((1:n) / n - 0.35).^2 * 1600);
+%f1 = 0.2 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 1 * exp( - ((1:n) / n - 0.35).^2 * 1600);
+
+
 
 
 path = NumericalScheme( f0, f1 );
