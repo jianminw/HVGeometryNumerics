@@ -15,9 +15,14 @@ function Action = ComputeAction(Path)
 % From some testing, circshift seems to have better performance than 
 % matrix multiplication. 
 
-vdiff = circshift(Path.v, -1) - circshift(Path.v, 1);
+%vdiff = circshift(Path.v, -1) - circshift(Path.v, 1);
 
-vx = vdiff * (size(Path.v, 1) - 1) / 2;
+% Changing to one directional finite differences because of suspected
+% parasitic modes
+
+vdiff = circshift(Path.v, -1) - Path.v;
+
+vx = vdiff * size(Path.v, 1);% / 2;
 
 Action = L2Squared(Path.v) + L2Squared(Path.z) + L2Squared(vx);
 %disp(L2(Path.v))
@@ -27,6 +32,9 @@ Action = L2Squared(Path.v) + L2Squared(Path.z) + L2Squared(vx);
 end
 
 % a very simple way to compute the square of the l2 norm of a function. 
+% here assumes 
 function y = L2Squared(f)
-y = mean( f .* f, 'all');
+m = size(f, 2);
+f2 = f .* f;
+y = (mean(mean(f2(:, 1:m-1))) + mean(mean(f2(:, 2:m)))) / 2;
 end

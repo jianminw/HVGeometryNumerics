@@ -4,7 +4,7 @@
 % The output a struct, with the field f, v, z corresponding to the past
 % path that was computed in the scheme.
 
-n = 200;
+n = 97;
 % Sine to cosine
 %f0 = sin( (1:n) / n * 2 * pi ) / 2;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
@@ -37,18 +37,26 @@ path = NumericalScheme( f0, f1 );
 % a coloring by time. 
 % C = ones(n, 1) * (1:m);
 % a coloring by flow maps.
-C = FlowMapColoring( path );
+[C, C_v] = FlowMapColoring( path );
 figure('Name', 'f')
 mesh(path.f, C)
 figure('Name', 'v')
-mesh(path.v, C)
+mesh(path.v, C_v)
 figure('Name', 'z')
 mesh(path.z, C)
+figure('Name', 'Action over Iterations')
+plot(path.action);
 
-function C = FlowMapColoring( path )
+function [C, C_v] = FlowMapColoring( path )
     C = zeros(size(path.f));
     for j = 1:size(path.f, 2)
         C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
+    end
+    
+    C_v = zeros(size(path.v));
+    scaleFactor = ( size(C, 2) - 1 ) / ( size(C_v, 2) - 1) ;
+    for j = 1:( (size(path.f, 2) - 1) / scaleFactor + 1 )
+        C_v( :, j) = C( :, (j - 1) * scaleFactor + 1 );
     end
 end
 

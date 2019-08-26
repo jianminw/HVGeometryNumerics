@@ -32,12 +32,14 @@ path.f = LinearInterpolation( f0, f1, timeSteps);
 path.v = zeros(size(path.f));
 path.z = (f1 - f0)' * ones(1, timeSteps+1); 
 disp(ComputeAction(path))
+bestPath = path;
 
 % Now iterate the scheme. 
 % For a start, the stopping condition will just be a set number of 
 % iterations. 
 
-maxIterations = 50;
+maxIterations = 100;
+action = zeros(maxIterations, 1);
 
 for i = 1:maxIterations
     %disp('iteration:')
@@ -54,6 +56,11 @@ for i = 1:maxIterations
     format long
     %disp(ComputeAction(path))
     disp(ComputeAction(newPath))
+    action(i) = ComputeAction(newPath);
+    
+    if ComputeAction(newPath) < ComputeAction(bestPath)
+        bestPath = newPath;
+    end
     
     if ComputeAction(newPath) >= ComputeAction(path)
         % Then the process will have "converged". No more accuracy can
@@ -68,10 +75,11 @@ if i == maxIterations
     disp("Maximum iterations have been reached.")
 end
 
-save('OptimalPath.mat', 'path')
-finalPath.f = path.f;
-finalPath.v = path.v;
-finalPath.z = path.z;
-finalPath.phi = path.phi;
+save('OptimalPath.mat', 'bestPath')
+finalPath.f = bestPath.f;
+finalPath.v = bestPath.v;
+finalPath.z = bestPath.z;
+finalPath.phi = bestPath.phi;
+finalPath.action = action;
 
 end

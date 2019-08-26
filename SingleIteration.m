@@ -22,8 +22,12 @@ m = size(oldPath.f, 2);
 DeltaX = 1 / n;
 DeltaT = 1 / (m-1);
 
-Dx = circshift( eye(n), -1 ) - circshift( eye(n), 1) ;
-Dx = Dx / ( 2 * DeltaX );
+%Dx = circshift( eye(n), -1 ) - circshift( eye(n), 1) ;
+%Dx = Dx / 2;
+%Switching to one sided derivatives
+Dx = circshift( eye(n), -1) - eye(n);
+Dx = - Dx';
+Dx = Dx / DeltaX ;
 
 Dtplus = circshift( eye(m), -1 ) - eye (m) ;
 % make sure the wrap around in time doesn't happen. 
@@ -52,7 +56,7 @@ ft = oldPath.f * Dtplus';
 
 v = zeros(n, m);
 for j = 1:m
-    A = - Dx^2 + eye(n) + eye(n) .* ( fx(:, j) .* fx(:, j) ) ;
+    A = - Dx * (- Dx') + eye(n) + eye(n) .* ( fx(:, j) .* fx(:, j) ) ;
     b = - fx(:, j) .* ft(:, j);
     v(:, j) = A \ b;
     %[result, ~, ~, ~] = pcg(A, b);
@@ -100,7 +104,7 @@ while (~validityCheck)
         interval = phi(:, j) - circshift( phi(:, j-1), 1);
         interval = interval + (interval < 0);
         interval = interval(2:n);
-        validityCheck = sum( (2 * interval) < prevInterval ) == 0;
+        validityCheck = ( sum( ( 2 * interval) < prevInterval ) == 0 );
         if (~validityCheck)
             timeSteps = timeSteps * 2;
             disp(j)
