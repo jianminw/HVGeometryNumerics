@@ -21,6 +21,7 @@ function Action = ComputeAction(Path)
 % parasitic modes
 
 vdiff = circshift(Path.v, -1) - Path.v;
+%vdiff = Path.v - circshift(Path.v, 1);
 
 vx = vdiff * size(Path.v, 1);% / 2;
 

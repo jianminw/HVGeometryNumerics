@@ -10,8 +10,12 @@ n = 97;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
 
 % Sine to negative sine
-f0 = sin( (1:n) / n * 8 * pi ) / 2;
-f1 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
+f1 = sin( (1:n) / n * 8 * pi ) / 2;
+f0 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
+scaling = 2.5;
+f1 = scaling * f1;
+f0 = scaling * f0;
+
 
 % narrow bump to wide bump
 %f0 = 5 * ( sin( (1:n) / n * pi ) ).^32;
@@ -28,9 +32,11 @@ f1 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
 %f1 = 0.2 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 1 * exp( - ((1:n) / n - 0.35).^2 * 1600);
 
 
+plotVOnIteration = 1;
+maxIterations = 2;
+timeSteps = length(f0);
 
-
-path = NumericalScheme( f0, f1 );
+path = NumericalScheme( f0, f1, plotVOnIteration, maxIterations, timeSteps);
 
 % plotting
 [n, m] = size(path.f);

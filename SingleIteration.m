@@ -15,7 +15,7 @@
 % there were some errors that seem to be caused by passing the outputs out
 % as a struct, so they are passed out as a vector for now. 
 
-function newPath = SingleIteration(oldPath, f0, f1)
+function newPath = SingleIteration(oldPath, f0, f1, iteration, plotV)
 
 n = size(oldPath.f, 1);
 m = size(oldPath.f, 2);
@@ -26,7 +26,7 @@ DeltaT = 1 / (m-1);
 %Dx = Dx / 2;
 %Switching to one sided derivatives
 Dx = circshift( eye(n), -1) - eye(n);
-Dx = - Dx';
+%Dx = - Dx';
 Dx = Dx / DeltaX ;
 
 Dtplus = circshift( eye(m), -1 ) - eye (m) ;
@@ -189,6 +189,12 @@ newPath.v = v;
 newPath.z = z;
 newPath.phi = phi;
 
+if (plotV == 1)
+[C, C_v] = FlowMapColoring(newPath);
+figure('Name', ['v Iteration:' int2str(iteration)])
+mesh(newPath.v, C_v)
+end
+
 end
 
 % A pair of functions to handle interpolation with the wrap around in time.
@@ -206,5 +212,19 @@ function Vq = interpOnS1andTime(T, X, V, Tq, Xq)
     newV = cat(1, V, V, V);
     %disp(X)
     Vq = interp2( T, newX, newV, Tq, Xq );
+end
+
+
+function [C, C_v] = FlowMapColoring( path )
+    C = zeros(size(path.f));
+    for j = 1:size(path.f, 2)
+        C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
+    end
+    
+    C_v = zeros(size(path.v));
+    scaleFactor = ( size(C, 2) - 1 ) / ( size(C_v, 2) - 1) ;
+    for j = 1:( (size(path.f, 2) - 1) / scaleFactor + 1 )
+        C_v( :, j) = C( :, (j - 1) * scaleFactor + 1 );
+    end
 end
 
