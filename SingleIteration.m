@@ -15,7 +15,9 @@
 % there were some errors that seem to be caused by passing the outputs out
 % as a struct, so they are passed out as a vector for now. 
 
-function newPath = SingleIteration(oldPath, f0, f1, iteration, plotV)
+function newPath = SingleIteration(oldPath, f0, f1, iteration)
+
+config = options();
 
 n = size(oldPath.f, 1);
 m = size(oldPath.f, 2);
@@ -63,6 +65,11 @@ for j = 1:m
     %v(:, j) = result;
 end
 
+% If set in config, compute z for the above f and v to track the action
+% within the iteration. 
+
+
+
 % Step 2: Computing rho, which follows the continuity equation with v, 
 % and has initial condition 1. 
 
@@ -100,12 +107,13 @@ while (~validityCheck)
         % check that none of the intervals shrink too much. 
         prevInterval = phi(:, j-1) - circshift( phi(:, j-1), 1);
         prevInterval = prevInterval + (prevInterval < 0);
-        prevInterval = prevInterval(2:n);
         interval = phi(:, j) - circshift( phi(:, j-1), 1);
         interval = interval + (interval < 0);
-        interval = interval(2:n);
-        validityCheck = ( sum( ( 2 * interval) < prevInterval ) == 0 );
-        if (~validityCheck)
+        % check for both shrinking and growing intervals for symmetry. 
+        scaleFactor = 2;
+        shrinkingIntervals = sum( ( scaleFactor * interval) < prevInterval );
+        growingIntervals = sum( interval > (scaleFactor * prevInterval) );
+        if shrinkingIntervals > 0 || growingIntervals > 0
             timeSteps = timeSteps * 2;
             disp(j)
             disp(timeSteps)
@@ -189,11 +197,9 @@ newPath.v = v;
 newPath.z = z;
 newPath.phi = phi;
 
-if (plotV == 1)
-[C, C_v] = FlowMapColoring(newPath);
-figure('Name', ['v Iteration:' int2str(iteration)])
-mesh(newPath.v, C_v)
-end
+
+plotName = ['Iteration: ' int2str(iteration)];
+plotting( newPath, config.plotFOnIteration, config.plotVOnIteration, config.plotZOnIteration, plotName);
 
 end
 
@@ -212,19 +218,5 @@ function Vq = interpOnS1andTime(T, X, V, Tq, Xq)
     newV = cat(1, V, V, V);
     %disp(X)
     Vq = interp2( T, newX, newV, Tq, Xq );
-end
-
-
-function [C, C_v] = FlowMapColoring( path )
-    C = zeros(size(path.f));
-    for j = 1:size(path.f, 2)
-        C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
-    end
-    
-    C_v = zeros(size(path.v));
-    scaleFactor = ( size(C, 2) - 1 ) / ( size(C_v, 2) - 1) ;
-    for j = 1:( (size(path.f, 2) - 1) / scaleFactor + 1 )
-        C_v( :, j) = C( :, (j - 1) * scaleFactor + 1 );
-    end
 end
 

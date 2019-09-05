@@ -14,11 +14,13 @@
 % maxIterations - the maximum number of iterations that the scheme should
 % run through. Currently initialized on line 37. 
 
-function finalPath = NumericalScheme( f0, f1, plotVOnIteration, maxIterations, timeSteps)
+function finalPath = NumericalScheme( f0, f1 )
 
-% Intervals in space are given by f0 and f1
-% Time step needs to be set. 
-% Idea 1: Use the same as steps in space. 
+% Load up config struct from options.m
+
+config = options();
+timeSteps = config.timeSteps;
+maxIterations = config.maxIterations;
 
 % Starting path is linear interpolation in time.
 % Only f is necessary here for the iterative scheme, but v and z are
@@ -42,7 +44,7 @@ for i = 1:maxIterations
     %disp('iteration:')
     %disp(i)
     %[f, v, z] 
-    newPath = SingleIteration(path, f0, f1, i, plotVOnIteration);
+    newPath = SingleIteration(path, f0, f1, i);
     %newPath.f = f;
     %newPath.v = v;
     %newPath.z = z;

@@ -4,7 +4,9 @@
 % The output a struct, with the field f, v, z corresponding to the past
 % path that was computed in the scheme.
 
-n = 97;
+config = options();
+
+n = config.spaceIntervals;
 % Sine to cosine
 %f0 = sin( (1:n) / n * 2 * pi ) / 2;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
@@ -31,12 +33,7 @@ f0 = scaling * f0;
 %f0 = 1 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 0.2 * exp( - ((1:n) / n - 0.35).^2 * 1600);
 %f1 = 0.2 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 1 * exp( - ((1:n) / n - 0.35).^2 * 1600);
 
-
-plotVOnIteration = 1;
-maxIterations = 2;
-timeSteps = length(f0);
-
-path = NumericalScheme( f0, f1, plotVOnIteration, maxIterations, timeSteps);
+path = NumericalScheme( f0, f1 );
 
 % plotting
 [n, m] = size(path.f);
