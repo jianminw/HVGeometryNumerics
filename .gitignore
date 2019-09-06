@@ -1,2 +1,4 @@
 # ignore autosaves
 *.asv
+# ignore figures saved
+*.fig

@@ -8,7 +8,7 @@ function config = options()
     config.plotVOnIteration = true;
     config.plotZOnIteration = false;
     
-    config.maxIterations = 3;
+    config.maxIterations = 10;
     config.spaceIntervals = 97;
     config.timeSteps = config.spaceIntervals;
     

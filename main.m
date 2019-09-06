@@ -14,7 +14,7 @@ n = config.spaceIntervals;
 % Sine to negative sine
 f1 = sin( (1:n) / n * 8 * pi ) / 2;
 f0 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
-scaling = 2.5;
+scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
 
@@ -48,7 +48,12 @@ mesh(path.v, C_v)
 figure('Name', 'z')
 mesh(path.z, C)
 figure('Name', 'Action over Iterations')
-plot(path.action);
+plot(path.action, 'DisplayName', 'Action after iteration');
+if config.computeActionMidIteration
+    hold on
+    plot(path.midIterationAction, 'DisplayName', 'Action after step 1')
+    legend
+end
 
 function [C, C_v] = FlowMapColoring( path )
     C = zeros(size(path.f));

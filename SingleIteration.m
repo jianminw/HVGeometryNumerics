@@ -67,8 +67,17 @@ end
 
 % If set in config, compute z for the above f and v to track the action
 % within the iteration. 
+% z = f_t + f_x v
+% should be a simple computation. 
 
-
+if config.computeActionMidIteration
+    z = ft + fx .* v;
+    midIterationPath = struct;
+    midIterationPath.f = oldPath.f;
+    midIterationPath.v = v;
+    midIterationPath.z = z;
+    newPath.midIterationAction = ComputeAction(midIterationPath);
+end
 
 % Step 2: Computing rho, which follows the continuity equation with v, 
 % and has initial condition 1. 

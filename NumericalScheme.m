@@ -39,6 +39,9 @@ bestPath = path;
 % iterations. 
 
 action = zeros(maxIterations, 1);
+if config.computeActionMidIteration
+    midIterationAction = zeros(maxIterations, 1);
+end
 
 for i = 1:maxIterations
     %disp('iteration:')
@@ -56,6 +59,9 @@ for i = 1:maxIterations
     %disp(ComputeAction(path))
     disp(ComputeAction(newPath))
     action(i) = ComputeAction(newPath);
+    if config.computeActionMidIteration
+        midIterationAction(i) = newPath.midIterationAction;
+    end
     
     if ComputeAction(newPath) < ComputeAction(bestPath)
         bestPath = newPath;
@@ -81,4 +87,7 @@ finalPath.z = bestPath.z;
 finalPath.phi = bestPath.phi;
 finalPath.action = action;
 
+if config.computeActionMidIteration
+    finalPath.midIterationAction = midIterationAction;
+end
 end
