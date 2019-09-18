@@ -28,7 +28,7 @@ DeltaT = 1 / (m-1);
 %Dx = Dx / 2;
 %Switching to one sided derivatives
 Dx = circshift( eye(n), -1) - eye(n);
-%Dx = - Dx';
+% Dx = - Dx';
 Dx = Dx / DeltaX ;
 
 Dtplus = circshift( eye(m), -1 ) - eye (m) ;
@@ -37,7 +37,12 @@ Dtplus(m, 1) = 0;
 Dtplus(m, m-1) = -1;
 Dtplus(m, m) = 1; 
 Dtplus = Dtplus / DeltaT;
-%disp(Dtplus)
+
+Dtminus = eye(m) - circshift( eye(m), 1);
+Dtminus(1, m) = 0;
+Dtminus(1, 1) = -1;
+Dtminus(1, 2) = 1;
+Dtminus = Dtminus / DeltaT;
 
 % Step 1: Finding the optimal v from the old f. 
 % - v_xx + (1 + f_x^2) v = - f_x f_t 
@@ -78,6 +83,8 @@ if config.computeActionMidIteration
     midIterationPath.z = z;
     newPath.midIterationAction = ComputeAction(midIterationPath);
 end
+
+
 
 % Step 2: Computing rho, which follows the continuity equation with v, 
 % and has initial condition 1. 
@@ -124,8 +131,9 @@ while (~validityCheck)
         growingIntervals = sum( interval > (scaleFactor * prevInterval) );
         if shrinkingIntervals > 0 || growingIntervals > 0
             timeSteps = timeSteps * 2;
-            disp(j)
-            disp(timeSteps)
+            %disp(j)
+            %disp(timeSteps)
+            validityCheck = false;
             break;
         end
     end
@@ -142,8 +150,8 @@ rho_Phi = zeros(n, timeSteps + 1);
 for j = 1:(timeSteps + 1)
     x = (1/2:1:n-1/2) / n;
     t = (0:m-1) / (m-1);
-    xq = phi(:, j);
-    temp = interpOnS1andTime( t, x', rho, (j-1)/timeSteps,  xq ) ;
+    xquery = phi(:, j);
+    temp = interpOnS1andTime( t, x', rho, (j-1)/timeSteps,  xquery ) ;
     rho_Phi(:, j) = temp; 
 end
 %figure('Name', 'phi')

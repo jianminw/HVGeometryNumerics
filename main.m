@@ -47,6 +47,7 @@ figure('Name', 'v')
 mesh(path.v, C_v)
 figure('Name', 'z')
 mesh(path.z, C)
+
 figure('Name', 'Action over Iterations')
 plot(path.action, 'DisplayName', 'Action after iteration');
 if config.computeActionMidIteration
@@ -55,6 +56,10 @@ if config.computeActionMidIteration
     legend
 end
 
+%{
+figure('Name', 'Error of end of iteration paths')
+plot(path.error)
+%}
 function [C, C_v] = FlowMapColoring( path )
     C = zeros(size(path.f));
     for j = 1:size(path.f, 2)

@@ -25,7 +25,10 @@ vdiff = circshift(Path.v, -1) - Path.v;
 
 vx = vdiff * size(Path.v, 1);% / 2;
 
-Action = L2Squared(Path.v) + L2Squared(Path.z) + L2Squared(vx);
+newZ = ComputeZFromFV(Path);
+
+%Action = L2Squared(Path.v) + L2Squared(Path.z) + L2Squared(vx);
+Action = L2Squared(Path.v) + L2Squared(newZ) + L2Squared(vx);
 %disp(L2(Path.v))
 %disp(L2(Path.z))
 %disp(L2(vx))
@@ -35,7 +38,6 @@ end
 % a very simple way to compute the square of the l2 norm of a function. 
 % here assumes 
 function y = L2Squared(f)
-m = size(f, 2);
 f2 = f .* f;
-y = (mean(mean(f2(:, 1:m-1))) + mean(mean(f2(:, 2:m)))) / 2;
+y = (mean(mean(f2))) / 2;
 end
