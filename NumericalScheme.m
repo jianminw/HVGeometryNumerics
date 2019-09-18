@@ -83,7 +83,6 @@ if i == maxIterations
     disp("Maximum iterations have been reached.")
 end
 
-save('OptimalPath.mat', 'bestPath')
 finalPath.f = bestPath.f;
 finalPath.v = bestPath.v;
 finalPath.z = bestPath.z;
@@ -94,4 +93,5 @@ finalPath.error = error;
 if config.computeActionMidIteration
     finalPath.midIterationAction = midIterationAction;
 end
+save('OptimalPath.mat', 'finalPath')
 end

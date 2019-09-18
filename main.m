@@ -49,11 +49,18 @@ figure('Name', 'z')
 mesh(path.z, C)
 
 figure('Name', 'Action over Iterations')
-plot(path.action, 'DisplayName', 'Action after iteration');
+if ~config.computeActionMidIteration
+    plot(path.action, 'DisplayName', 'Action after iteration');
+end
 if config.computeActionMidIteration
+    k = length(path.action);
+    y = cat(2, path.midIterationAction, path.action);
+    x = cat(2, (1:k)', (1:k)');
+    y = reshape(y', [], 1);
+    x = reshape(x', [], 1);
     hold on
-    plot(path.midIterationAction, 'DisplayName', 'Action after step 1')
-    legend
+    plot(x, y);
+    scatter(1:k, path.action);
 end
 
 %{
