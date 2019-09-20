@@ -2,6 +2,7 @@
 % differences compared to matrix multiplication. 
 
 function testing()
+%{
     k = 100;
     results = zeros(3, k);
     for i = 1:k
@@ -15,6 +16,7 @@ function testing()
     hold on
     plot( 1:k, results(2, :), 'r' )
     plot( 1:k, results(3, :), 'b' )
+%}
 end
 
 function useMultiply(n)
@@ -30,4 +32,11 @@ function useCircshift(n)
         f = rand(n);
         fdiff = circshift(f, 1) - f;
     end
+end
+
+function Vq = interpOnS1andTime(T, X, V, Tq, Xq)
+    newX = cat(1, X - ones(size(X)), X, X + ones(size(X)));
+    newV = cat(1, V, V, V);
+    %disp(X)
+    Vq = interp2( T, newX, newV, Tq, Xq );
 end

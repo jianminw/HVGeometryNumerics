@@ -14,6 +14,8 @@ function Action = ComputeAction(Path)
 % Use balanced derivatives. 
 % From some testing, circshift seems to have better performance than 
 % matrix multiplication. 
+% This is most likely a negligible amout of time cost, and the clarity of
+% the finite difference is most likely much more valuable. 
 
 %vdiff = circshift(Path.v, -1) - circshift(Path.v, 1);
 

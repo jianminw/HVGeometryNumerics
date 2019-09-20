@@ -110,6 +110,10 @@ validityCheck = false;
 timeSteps = m-1;
 phi = ones(n, timeSteps + 1);
 
+if v < 0
+    disp('error in v')
+end
+
 while (~validityCheck)
     validityCheck = true;
     phi = ones(n, timeSteps + 1);
@@ -117,7 +121,8 @@ while (~validityCheck)
 
     for j = 2:(timeSteps + 1)
         % need to mess with this to make it work for smaller time steps. 
-        Dphi = interpOnS1andTime( (0:m-1) / (m-1), phi(:, 1), v, (j-1)/timeSteps, phi(:, j-1) );
+        %Dphi = interpOnS1andTime( (0:m-1) / (m-1), phi(:, 1), v, (j-1)/timeSteps, phi(:, j-1) );
+        Dphi = interpOnS1( phi(:, 1), v(:, j), phi(:, j-1) );
         phi(:, j) = phi(:, j-1) + Dphi / timeSteps;
         phi(:, j) = phi(:, j) + (phi(:, j) <= 0) - (phi(:, j) > 1);
         % check that none of the intervals shrink too much. 
@@ -217,6 +222,14 @@ newPath.phi = phi;
 
 plotName = ['Iteration: ' int2str(iteration)];
 plotting( newPath, config.plotFOnIteration, config.plotVOnIteration, config.plotZOnIteration, plotName);
+
+figure('Name', [plotName, ' Trajectories'])
+a = size(phi, 1);
+b = size(phi, 2);
+hold on
+for i = 1:a
+    plot(phi(i, :), 1:b)
+end
 
 end
 

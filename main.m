@@ -12,8 +12,8 @@ n = config.spaceIntervals;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
 
 % Sine to negative sine
-f1 = sin( (1:n) / n * 8 * pi ) / 2;
-f0 = -1 * sin( (1:n) / n * 8 * pi ) / 2;
+f1 = sin( (1:n) / n * 4 * pi );
+f0 = sin( (1:n) / n * 4 * pi + pi / 2);
 scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
@@ -62,6 +62,15 @@ if config.computeActionMidIteration
     plot(x, y);
     scatter(1:k, path.action);
 end
+%{
+figure('Name', 'Trajectories')
+a = size(path.phi, 1);
+b = size(path.phi, 2);
+hold on
+for i = 1:a
+    plot( path.phi(i, :), 1:b)
+end
+%}
 
 %{
 figure('Name', 'Error of end of iteration paths')
