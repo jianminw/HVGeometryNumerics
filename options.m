@@ -5,12 +5,15 @@ function config = options()
     config = struct;
     % every option should be a field in the struct. 
     config.plotFOnIteration = false;
-    config.plotVOnIteration = true;
+    config.plotVOnIteration = false;
     config.plotZOnIteration = false;
+    config.plotTrajectoriesOnIteration = false;
     
-    config.maxIterations = 20;
+    config.maxIterations = 10;
     config.spaceIntervals = 50;
     config.timeSteps = 800;
     
     config.computeActionMidIteration = true;
+    
+    config.plotTrajectory = false;
 end

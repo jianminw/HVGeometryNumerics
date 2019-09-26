@@ -19,47 +19,41 @@ function newPath = SingleIteration(oldPath, f0, f1, iteration)
 
 config = options();
 
+% size is NOT taken from the config because the number of timesteps can be
+% increased throughout the numerical scheme. 
 n = size(oldPath.f, 1);
-m = size(oldPath.f, 2);
+m = size(oldPath.f, 2) - 1;
 DeltaX = 1 / n;
-DeltaT = 1 / (m-1);
+DeltaT = 1 / m;
 
-%Dx = circshift( eye(n), -1 ) - circshift( eye(n), 1) ;
-%Dx = Dx / 2;
-%Switching to one sided derivatives
+% Dx is taken as a one sided derivative since it does not affect the second
+% derivative for v. 
+% May shift to center of grid for computation of fx to preserve symmetry in
+% the future. 
 Dx = circshift( eye(n), -1) - eye(n);
-% Dx = - Dx';
 Dx = Dx / DeltaX ;
 
-Dtplus = circshift( eye(m), -1 ) - eye (m) ;
-% make sure the wrap around in time doesn't happen. 
-Dtplus(m, 1) = 0;
-Dtplus(m, m-1) = -1;
-Dtplus(m, m) = 1; 
-Dtplus = Dtplus / DeltaT;
-
-Dtminus = eye(m) - circshift( eye(m), 1);
-Dtminus(1, m) = 0;
-Dtminus(1, 1) = -1;
-Dtminus(1, 2) = 1;
-Dtminus = Dtminus / DeltaT;
+% Dt needs to be a m + 1 by m matrix. It is on the right when multiplied
+% with f, and f is a n by m + 1 matrix. 
+% Then manually set the non-zero values of Dt since 
+Dt = zeros(m + 1 , m);
+for i = 1:m
+    Dt(i, i) = -1;
+    Dt(i + 1, i) = 1;
+end
+Dt = Dt / DeltaT;
 
 % Step 1: Finding the optimal v from the old f. 
 % - v_xx + (1 + f_x^2) v = - f_x f_t 
 % need to do this separately for each time step, since the f_x^2 term 
 % is different for every time slice. 
 
-fx = Dx * oldPath.f;
-ft = oldPath.f * Dtplus';
-%figure('Name', 'ft')
-%hold on
-%plot(1:n, oldPath.f(:, 1))
-%plot(1:n, oldPath.f(:, 2))
-%plot(1:n, oldPath.f(:, 3))
-%plot(1:n, ft(:, 1) - ft(:, 2))
-%figure('Name', 'fx')
-%plot(fx(:, 2))
-%plot(fx(:, 1) - fx(:, 2))
+% fx needs to be computed on the grid for v, which is offset in time. 
+fxtemp = Dx * oldPath.f; % values on the grid.
+fx = 1 / 2 * ( fxtemp(:, 1:m) + fxtemp(:, 2:m+1) ); 
+ft = oldPath.f * Dt;
+%disp(size(fx))
+%disp(size(ft))
 
 v = zeros(n, m);
 for j = 1:m
@@ -107,12 +101,8 @@ end
 % first. 
 
 validityCheck = false;
-timeSteps = m-1;
+timeSteps = m;
 phi = ones(n, timeSteps + 1);
-
-if v < 0
-    disp('error in v')
-end
 
 while (~validityCheck)
     validityCheck = true;
@@ -121,8 +111,8 @@ while (~validityCheck)
 
     for j = 2:(timeSteps + 1)
         % need to mess with this to make it work for smaller time steps. 
-        %Dphi = interpOnS1andTime( (0:m-1) / (m-1), phi(:, 1), v, (j-1)/timeSteps, phi(:, j-1) );
-        Dphi = interpOnS1( phi(:, 1), v(:, j), phi(:, j-1) );
+        Dphi = interpOnS1andTime( (0:m-1) / (m-1), phi(:, 1), v, (j-1)/timeSteps, phi(:, j-1) );
+        %Dphi = interpOnS1( phi(:, 1), v(:, j), phi(:, j-1) );
         phi(:, j) = phi(:, j-1) + Dphi / timeSteps;
         phi(:, j) = phi(:, j) + (phi(:, j) <= 0) - (phi(:, j) > 1);
         % check that none of the intervals shrink too much. 
@@ -223,12 +213,14 @@ newPath.phi = phi;
 plotName = ['Iteration: ' int2str(iteration)];
 plotting( newPath, config.plotFOnIteration, config.plotVOnIteration, config.plotZOnIteration, plotName);
 
-figure('Name', [plotName, ' Trajectories'])
-a = size(phi, 1);
-b = size(phi, 2);
-hold on
-for i = 1:a
-    plot(phi(i, :), 1:b)
+if config.plotTrajectoriesOnIteration
+    figure('Name', [plotName, ' Trajectories'])
+    a = size(phi, 1);
+    b = size(phi, 2);
+    hold on
+    for i = 1:a
+        plot(phi(i, :), 1:b)
+    end
 end
 
 end

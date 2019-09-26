@@ -12,8 +12,8 @@ n = config.spaceIntervals;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
 
 % Sine to negative sine
-f1 = sin( (1:n) / n * 4 * pi );
-f0 = sin( (1:n) / n * 4 * pi + pi / 2);
+f0 = sin( (1:n) / n * 4 * pi );
+f1 = sin( (1:n) / n * 4 * pi + pi / 2);
 scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
@@ -40,6 +40,10 @@ path = NumericalScheme( f0, f1 );
 % a coloring by time. 
 % C = ones(n, 1) * (1:m);
 % a coloring by flow maps.
+plotting(path, true, true, true, '');
+
+%{ 
+Depreciated code.
 [C, C_v] = FlowMapColoring( path );
 figure('Name', 'f')
 mesh(path.f, C)
@@ -47,6 +51,7 @@ figure('Name', 'v')
 mesh(path.v, C_v)
 figure('Name', 'z')
 mesh(path.z, C)
+%}
 
 figure('Name', 'Action over Iterations')
 if ~config.computeActionMidIteration
@@ -62,13 +67,15 @@ if config.computeActionMidIteration
     plot(x, y);
     scatter(1:k, path.action);
 end
-%{
-figure('Name', 'Trajectories')
-a = size(path.phi, 1);
-b = size(path.phi, 2);
-hold on
-for i = 1:a
-    plot( path.phi(i, :), 1:b)
+
+if config.plotTrajectory
+    figure('Name', 'Trajectories')
+    a = size(path.phi, 1);
+    b = size(path.phi, 2);
+    hold on
+    for i = 1:a
+        plot( path.phi(i, :), 1:b)
+    end
 end
 %}
 
@@ -76,21 +83,3 @@ end
 figure('Name', 'Error of end of iteration paths')
 plot(path.error)
 %}
-function [C, C_v] = FlowMapColoring( path )
-    C = zeros(size(path.f));
-    for j = 1:size(path.f, 2)
-        C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
-    end
-    
-    C_v = zeros(size(path.v));
-    scaleFactor = ( size(C, 2) - 1 ) / ( size(C_v, 2) - 1) ;
-    for j = 1:( (size(path.f, 2) - 1) / scaleFactor + 1 )
-        C_v( :, j) = C( :, (j - 1) * scaleFactor + 1 );
-    end
-end
-
-function Vq = interpOnS1(X, V, Xq)
-    newX = cat(1, X - ones(size(X)), X, X + ones(size(X)));
-    newV = cat(1, V, V, V);
-    Vq = interp1( newX, newV, Xq );
-end

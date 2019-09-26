@@ -29,8 +29,8 @@ maxIterations = config.maxIterations;
 
 path = struct;
 path.f = LinearInterpolation( f0, f1, timeSteps);
-path.v = zeros(size(path.f));
-path.z = (f1 - f0)' * ones(1, timeSteps+1); 
+path.v = zeros(size(path.f, 1), timeSteps);
+path.z = (f1 - f0)' * ones(1, timeSteps); 
 disp(ComputeAction(path))
 bestPath = path;
 
@@ -83,12 +83,18 @@ if i == maxIterations
     disp("Maximum iterations have been reached.")
 end
 
+%{
 finalPath.f = bestPath.f;
 finalPath.v = bestPath.v;
 finalPath.z = bestPath.z;
 finalPath.phi = bestPath.phi;
 finalPath.action = action;
 finalPath.error = error;
+%}
+finalPath = path;
+finalPath.action = action;
+finalPath.error = error;
+
 
 if config.computeActionMidIteration
     finalPath.midIterationAction = midIterationAction;
