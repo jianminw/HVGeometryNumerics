@@ -10,8 +10,8 @@ function config = options()
     config.plotTrajectoriesOnIteration = false;
     
     config.maxIterations = 10;
-    config.spaceIntervals = 50;
-    config.timeSteps = 800;
+    config.spaceIntervals = 150;
+    config.timeSteps = 400;
     
     config.computeActionMidIteration = true;
     
