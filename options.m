@@ -9,11 +9,11 @@ function config = options()
     config.plotZOnIteration = false;
     config.plotTrajectoriesOnIteration = false;
     
-    config.maxIterations = 10;
-    config.spaceIntervals = 150;
-    config.timeSteps = 400;
+    config.maxIterations = 1000;
+    config.spaceIntervals = 100;
+    config.timeSteps = 200;
     
-    config.computeActionMidIteration = true;
+    config.computeActionMidIteration = false;
     
     config.plotTrajectory = false;
 end

@@ -13,15 +13,46 @@ n = config.spaceIntervals;
 
 % Sine to negative sine
 f1 = sin( (1:n) / n * 4 * pi );
-f0 = sin( (1:n) / n * 4 * pi + pi / 2);
-scaling = 1;
-f1 = scaling * f1;
-f0 = scaling * f0;
+f0 = - sin( (1:n) / n * 4 * pi );
+
+% Sine with quarter period shift
+%f1 = sin( (1:n) / n * 4 * pi );
+%f0 = sin( (1:n) / n * 4 * pi + pi / 2);
 
 
 % narrow bump to wide bump
-%f0 = 5 * ( sin( (1:n) / n * pi ) ).^32;
-%f1 = 5 * ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+%f0 = ( sin( (1:n) / n * pi ) ).^32;
+%f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+
+% bumps with high-frequency perturbation
+% f1 = ( sin( (1:n) / n * pi ) ).^6;
+% f0 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^6+ 0.15*sin((1:n) / n * 24* pi );
+
+% narrow bumps phase shift
+%space=0.15;
+%f0 = ( sin( (1:n) / n * pi-space ) ).^16;
+%f1 = ( sin( ( (1:n) / n + space) * pi ) ).^16;
+
+% narrow bump to wide bump phase shift
+% space=0.15;
+% f0 = ( sin( (1:n) / n * pi -space -0.3) ).^64;
+% f1 = 0.6*( sin( ( (1:n) / n + space ) * pi ) ).^6;
+
+% narrow bump to wide bump phase shift
+% space=0.1;
+% f1 = (sin(((1:n) / n  -space -0.1)*pi )).^64;
+% f0 = 0.6*( sin(  ((1:n) / n + space)  * pi )).^6;
+
+% for Irina
+%space=0.1;
+%f1 = (sin(((1:n) / n  -space -0.05)*pi )).^70+(sin(((1:n) / n  -space -0.1)*pi )).^170;
+%f0 = 0.9*( sin(  ((1:n) / n + space)  * pi )).^6 -0.25*(sin(((1:n) / n  +space +0.25)*pi )).^70 ;
+
+% narrow bumps phase shift
+% space=0.15;
+% f0 = ( sin( (1:n) / n * pi-space ) ).^16;
+% f1 = ( sin( ( (1:n) / n + space) * pi ) ).^16;
+
 
 % small and large bumps 
 % similar in size
@@ -32,6 +63,27 @@ f0 = scaling * f0;
 % dissimilar in size
 %f0 = 1 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 0.2 * exp( - ((1:n) / n - 0.35).^2 * 1600);
 %f1 = 0.2 * exp( - ((1:n) / n - 0.25).^2 * 1600 ) + 1 * exp( - ((1:n) / n - 0.35).^2 * 1600);
+
+% f00 = zeros( 1, n );
+% delx=1/n;
+% x=0:delx:0.999999;
+% f0 = 3*exp(-64*(x-0.5).^4);
+% f1 = 2*(0.4-2*abs(x-0.5));
+% f1=max(f00,f1);
+
+% narrow bumps phase shift
+% space=0.2;
+% f0 = 0.5*( sin( (1:n) / n * pi-space ) ).^32;
+%  f00 = zeros( 1, n );
+%  delx=1/n;
+%  x=0:delx:0.999999;
+% f1 = (1-5*abs((x-0.5+space)));
+%  f1=max(f00,f1);
+
+
+scaling = 1;
+f1 = scaling * f1;
+f0 = scaling * f0;
 
 path = NumericalScheme( f0, f1 );
 
