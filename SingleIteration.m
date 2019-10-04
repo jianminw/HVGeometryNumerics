@@ -15,9 +15,11 @@
 % there were some errors that seem to be caused by passing the outputs out
 % as a struct, so they are passed out as a vector for now. 
 
-function newPath = SingleIteration(oldPath, f0, f1, iteration)
+function newPath = SingleIteration(oldPath, f0, f1, iteration, config)
 
-config = options();
+% Depreciated: config is now passed in for better control of the process
+% and use of the same functions in the multi scale method. 
+%config = options();
 
 % size is NOT taken from the config because the number of timesteps can be
 % increased throughout the numerical scheme. 
@@ -100,39 +102,8 @@ end
 % this is a mess. I think I should do this without the validity check
 % first. 
 
-validityCheck = false;
-timeSteps = m;
-phi = ones(n, timeSteps + 1);
-
-while (~validityCheck)
-    validityCheck = true;
-    phi = ones(n, timeSteps + 1);
-    phi(:, 1) = (1:n) / n;
-
-    for j = 2:(timeSteps + 1)
-        % need to mess with this to make it work for smaller time steps. 
-        Dphi = interpOnS1andTime( (0:m-1) / (m-1), phi(:, 1), v, (j-1)/timeSteps, phi(:, j-1) );
-        %Dphi = interpOnS1( phi(:, 1), v(:, j), phi(:, j-1) );
-        phi(:, j) = phi(:, j-1) + Dphi / timeSteps;
-        phi(:, j) = phi(:, j) + (phi(:, j) <= 0) - (phi(:, j) > 1);
-        % check that none of the intervals shrink too much. 
-        prevInterval = phi(:, j-1) - circshift( phi(:, j-1), 1);
-        prevInterval = prevInterval + (prevInterval < 0);
-        interval = phi(:, j) - circshift( phi(:, j-1), 1);
-        interval = interval + (interval < 0);
-        % check for both shrinking and growing intervals for symmetry. 
-        scaleFactor = 2;
-        shrinkingIntervals = sum( ( scaleFactor * interval) < prevInterval );
-        growingIntervals = sum( interval > (scaleFactor * prevInterval) );
-        if shrinkingIntervals > 0 || growingIntervals > 0
-            timeSteps = timeSteps * 2;
-            %disp(j)
-            %disp(timeSteps)
-            validityCheck = false;
-            break;
-        end
-    end
-end
+phi = ODEScheme( v, config);
+disp(v)
 
 % Step 4: Finding the scaling factors for z, and finish. 
 
@@ -141,12 +112,12 @@ end
 % same for each interation, and then the next iteration would need to
 % refine the grid anyways. 
 
-rho_Phi = zeros(n, timeSteps + 1);
-for j = 1:(timeSteps + 1)
+rho_Phi = zeros(n, m + 1);
+for j = 1:(m + 1)
     x = (1/2:1:n-1/2) / n;
     t = (0:m-1) / (m-1);
     xquery = phi(:, j);
-    temp = interpOnS1andTime( t, x', rho, (j-1)/timeSteps,  xquery ) ;
+    temp = interpOnS1andTime( t, x', rho, (j-1)/m,  xquery ) ;
     rho_Phi(:, j) = temp; 
 end
 %figure('Name', 'phi')
@@ -157,40 +128,39 @@ end
 
 C = eye(n);
 for i = 1:n
-    s = sum( rho_Phi(i, :) ) - rho_Phi(i, 1) / 2 - rho_Phi(i, timeSteps + 1) / 2;
+    s = sum( rho_Phi(i, :) ) - rho_Phi(i, 1) / 2 - rho_Phi(i, m + 1) / 2;
     %disp(s)
-    s = s / timeSteps;
+    s = s / m;
     %disp(s)
     %disp(size(f1))
     %disp(size(phi(:, 1)))
-    C(i, i) = (interpOnS1( phi(:, 1) , f1', phi(i, timeSteps + 1) ) - f0(i) ) / s;
+    C(i, i) = (interpOnS1( phi(:, 1) , f1', phi(i, m + 1) ) - f0(i) ) / s;
 end
 z_Phi = C * rho_Phi;
 
-f_Phi = zeros(n, timeSteps + 1);
+f_Phi = zeros(n, m + 1);
 f_Phi(:, 1) = f0;
 
-for j = 2:(timeSteps + 1)
-    f_Phi(:, j) = f_Phi(:, j-1) + (z_Phi(:, j-1) + z_Phi(:, j) ) / 2 / timeSteps ;
+for j = 2:(m + 1)
+    f_Phi(:, j) = f_Phi(:, j-1) + (z_Phi(:, j-1) + z_Phi(:, j) ) / 2 / m ;
 end
 
 % interpolate back to the Eulerian coordinates. 
-f = zeros(n, timeSteps + 1);
+f = zeros(n, m + 1);
 f(:, 1) = f0;
 %disp(size(f_Phi(:, 1)))
 %disp(size(f0))
 %figure('Name', 'f_Phi')
 %plot(phi(:, 1), f_Phi(:, 1) - f0')
 
-f(:, timeSteps + 1) = f1;
-for j = 2:timeSteps
+f(:, m + 1) = f1;
+for j = 2:m
     %size(f_Phi(:,j))
     %size(phi(:,j))
     x = phi(:, j);
     y = f_Phi(:, j);
     %disp(x)
     %disp(y)
-    %disp(x)
     f(:, j) = interpOnS1( x, y, phi(:, 1));
 end
 %figure('Name', 'f')
@@ -199,8 +169,8 @@ end
 %plot( phi(:, 1), f0, 'g')
 %plot( phi(:, 1), f1, 'b')
 
-z = zeros(n, timeSteps + 1);
-for j = 1:(timeSteps + 1)
+z = zeros(n, m + 1);
+for j = 1:(m + 1)
     z(:, j) = interpOnS1( phi(:, j), z_Phi(:, j), (0:n-1)/(n-1));
 end
 

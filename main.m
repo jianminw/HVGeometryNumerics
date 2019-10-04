@@ -12,8 +12,8 @@ n = config.spaceIntervals;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
 
 % Sine to negative sine
-f1 = sin( (1:n) / n * 4 * pi );
-f0 = - sin( (1:n) / n * 4 * pi );
+%f1 = sin( (1:n) / n * 4 * pi );
+%f0 = - sin( (1:n) / n * 4 * pi );
 
 % Sine with quarter period shift
 %f1 = sin( (1:n) / n * 4 * pi );
@@ -21,12 +21,12 @@ f0 = - sin( (1:n) / n * 4 * pi );
 
 
 % narrow bump to wide bump
-%f0 = ( sin( (1:n) / n * pi ) ).^32;
-%f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+f0 = ( sin( (1:n) / n * pi ) ).^32;
+f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
 
 % bumps with high-frequency perturbation
-% f1 = ( sin( (1:n) / n * pi ) ).^6;
-% f0 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^6+ 0.15*sin((1:n) / n * 24* pi );
+%f1 = ( sin( (1:n) / n * pi ) ).^6;
+%f0 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^6+ 0.15*sin((1:n) / n * 24* pi );
 
 % narrow bumps phase shift
 %space=0.15;
@@ -81,21 +81,18 @@ f0 = - sin( (1:n) / n * 4 * pi );
 %  f1=max(f00,f1);
 
 
-scaling = 1;
+scaling = 5;
 f1 = scaling * f1;
 f0 = scaling * f0;
 
-path = NumericalScheme( f0, f1 );
+path = NumericalScheme( f0, f1, config );
 
 % plotting
 [n, m] = size(path.f);
-% a coloring by time. 
-% C = ones(n, 1) * (1:m);
-% a coloring by flow maps.
 plotting(path, true, true, true, '');
 
 %{ 
-Depreciated code.
+Depreciated code. Moved to plotting.m
 [C, C_v] = FlowMapColoring( path );
 figure('Name', 'f')
 mesh(path.f, C)
@@ -104,6 +101,10 @@ mesh(path.v, C_v)
 figure('Name', 'z')
 mesh(path.z, C)
 %}
+
+% Some plots only really make sense over lots of iterations, so it would
+% seemt that the only place where these plots are created should be the end
+% of the entire scheme. These are not moved to plotting.m
 
 figure('Name', 'Action over Iterations')
 if ~config.computeActionMidIteration

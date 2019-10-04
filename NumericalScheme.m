@@ -14,11 +14,13 @@
 % maxIterations - the maximum number of iterations that the scheme should
 % run through. Currently initialized on line 37. 
 
-function finalPath = NumericalScheme( f0, f1 )
+function finalPath = NumericalScheme( f0, f1, config )
 
 % Load up config struct from options.m
+%config = options();
+% Depreciated: config is now passed in to facilitate use of this function
+% in the multi scale method.
 
-config = options();
 timeSteps = config.timeSteps;
 maxIterations = config.maxIterations;
 
@@ -48,7 +50,7 @@ for i = 1:maxIterations
     %disp('iteration:')
     %disp(i)
     %[f, v, z] 
-    newPath = SingleIteration(path, f0, f1, i);
+    newPath = SingleIteration(path, f0, f1, i, config);
     %newPath.f = f;
     %newPath.v = v;
     %newPath.z = z;

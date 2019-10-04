@@ -32,10 +32,13 @@ function [C, C_v] = FlowMapColoring( path )
         C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
     end
     
-    m_phi = size(path.phi, 2) - 1;
+    m_C = size(C, 2) - 1;
     m_v = size(path.v, 2);
-    T = (0:m_phi)/m_phi;
+    T = (0:m_C)/m_C;
     Tq = (-1/2 + 1:m_v ) / m_v;
+    %disp(size(T))
+    %disp(size(path.phi(:, 1)))
+    %disp(size(C))
     C_v = interpOnS1andTime( T, path.phi( :, 1), C, Tq, path.phi( :, 1));
 end
 
