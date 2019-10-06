@@ -7,22 +7,19 @@
 config = options();
 
 n = config.spaceIntervals;
+
 % Sine to cosine
 %f0 = sin( (1:n) / n * 2 * pi ) / 2;
 %f1 = cos( (1:n) / n * 2 * pi ) / 2;
 
 % Sine to negative sine
 %f1 = sin( (1:n) / n * 4 * pi );
-%f0 = - sin( (1:n) / n * 4 * pi );
-
-% Sine with quarter period shift
-%f1 = sin( (1:n) / n * 4 * pi );
 %f0 = sin( (1:n) / n * 4 * pi + pi / 2);
 
 
 % narrow bump to wide bump
-f0 = ( sin( (1:n) / n * pi ) ).^32;
-f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
+%f0 = ( sin( (1:n) / n * pi ) ).^32;
+%f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
 
 % bumps with high-frequency perturbation
 %f1 = ( sin( (1:n) / n * pi ) ).^6;
@@ -44,9 +41,9 @@ f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
 % f0 = 0.6*( sin(  ((1:n) / n + space)  * pi )).^6;
 
 % for Irina
-%space=0.1;
-%f1 = (sin(((1:n) / n  -space -0.05)*pi )).^70+(sin(((1:n) / n  -space -0.1)*pi )).^170;
-%f0 = 0.9*( sin(  ((1:n) / n + space)  * pi )).^6 -0.25*(sin(((1:n) / n  +space +0.25)*pi )).^70 ;
+space=0.1;
+f1 = (sin(((1:n) / n  -space -0.05)*pi )).^70+(sin(((1:n) / n  -space -0.1)*pi )).^170;
+f0 = 0.9*( sin(  ((1:n) / n + space)  * pi )).^6 -0.25*(sin(((1:n) / n  +space +0.25)*pi )).^70 ;
 
 % narrow bumps phase shift
 % space=0.15;
@@ -80,8 +77,7 @@ f1 = ( sin( ( (1:n) / n + 0.25 ) * pi ) ).^4;
 % f1 = (1-5*abs((x-0.5+space)));
 %  f1=max(f00,f1);
 
-
-scaling = 5;
+scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
 

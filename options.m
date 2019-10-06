@@ -10,13 +10,13 @@ function config = options()
     config.plotTrajectoriesOnIteration = false;
     
     % switch between first and second order schemes. 
-    config.odeScheme = 1;
+    config.odeScheme = 2;
     
-    config.maxIterations = 20;
+    config.maxIterations = 10;
     config.spaceIntervals = 50;
-    config.timeSteps = 100;
+    config.timeSteps = 200;
     
-    config.computeActionMidIteration = false;
+    config.computeActionMidIteration = true;
     
     config.plotTrajectory = true;
 end

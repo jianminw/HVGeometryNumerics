@@ -103,7 +103,7 @@ end
 % first. 
 
 phi = ODEScheme( v, config);
-disp(v)
+%disp(v)
 
 % Step 4: Finding the scaling factors for z, and finish. 
 
@@ -209,6 +209,6 @@ function Vq = interpOnS1andTime(T, X, V, Tq, Xq)
     newX = cat(1, X - ones(size(X)), X, X + ones(size(X)));
     newV = cat(1, V, V, V);
     %disp(X)
-    Vq = interp2( T, newX, newV, Tq, Xq, 'cubic');
+    Vq = interp2( T, newX, newV, Tq, Xq, 'spline');
 end
 
