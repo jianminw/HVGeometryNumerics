@@ -16,7 +16,7 @@ function config = options()
     config.spaceIntervals = 50;
     config.timeSteps = 200;
     
-    config.computeActionMidIteration = true;
+    config.computeActionMidIteration = false;
     
     config.plotTrajectory = true;
 end

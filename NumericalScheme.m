@@ -58,7 +58,6 @@ for i = 1:maxIterations
     %disp(z)
     
     % check that the new Path is actually better than the old path
-    format long
     %disp(ComputeAction(path))
     disp(ComputeAction(newPath))
     action(i) = ComputeAction(newPath);

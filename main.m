@@ -5,6 +5,9 @@
 % path that was computed in the scheme.
 
 config = options();
+mConfig = multiscaleConfig;
+
+format long
 
 n = config.spaceIntervals;
 
@@ -81,7 +84,8 @@ scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
 
-path = NumericalScheme( f0, f1, config );
+%path = NumericalScheme( f0, f1, config );
+path = multiscaleScheme( f0, f1, mConfig );
 
 % plotting
 [n, m] = size(path.f);
@@ -102,6 +106,7 @@ mesh(path.z, C)
 % seemt that the only place where these plots are created should be the end
 % of the entire scheme. These are not moved to plotting.m
 
+%{
 figure('Name', 'Action over Iterations')
 if ~config.computeActionMidIteration
     plot(path.action, 'DisplayName', 'Action after iteration');
@@ -116,6 +121,7 @@ if config.computeActionMidIteration
     plot(x, y);
     scatter(1:k, path.action);
 end
+%}
 
 if config.plotTrajectory
     figure('Name', 'Trajectories')
