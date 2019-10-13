@@ -195,6 +195,7 @@ end
 
 end
 
+%{
 % A pair of functions to handle interpolation with the wrap around in time.
 % The point at 0 should be interpolated between the last point and the 
 % first point. 
@@ -212,3 +213,4 @@ function Vq = interpOnS1andTime(T, X, V, Tq, Xq)
     Vq = interp2( T, newX, newV, Tq, Xq, 'spline');
 end
 
+%}
