@@ -7,10 +7,10 @@
 %       This should contain an iteration number, or something similar. 
 
 function plotting(path, plotF, plotV, plotZ, plotName)
-[C, C_v] = FlowMapColoring( path );
+[C_f, C_v, C_z] = FlowMapColoring( path );
 if plotF
     figure('Name', ['f ' plotName])
-    mesh( path.f, C )
+    mesh( path.f, C_f )
 end
 
 if plotV
@@ -20,26 +20,30 @@ end
 
 if plotZ
     figure('Name', ['z ' plotName])
-    mesh( path.z, C )
+    mesh( path.z, C_z )
 end
 
 end
 
 
-function [C, C_v] = FlowMapColoring( path )
-    C = zeros(size(path.f));
+function [C_f, C_v, C_z] = FlowMapColoring( path )
+    C_f = zeros(size(path.f));
     for j = 1:size(path.f, 2)
-        C( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
+        C_f( :, j) = interpOnS1( path.phi( :, j) , path.phi( :, 1), path.phi(:, 1));
     end
     
-    m_C = size(C, 2) - 1;
+    m_C = size(C_f, 2) - 1;
     m_v = size(path.v, 2);
     T = (0:m_C)/m_C;
     Tq = (-1/2 + 1:m_v ) / m_v;
     %disp(size(T))
     %disp(size(path.phi(:, 1)))
     %disp(size(C))
-    C_v = interpOnS1andTime( T, path.phi( :, 1), C, Tq, path.phi( :, 1));
+    C_v = interpOnS1andTime( T, path.phi( :, 1), C_f, Tq, path.phi( :, 1));
+    
+    m_z = size(path.z, 2);
+    Tq = (-1/2 + 1:m_z ) / m_z;
+    C_z = interpOnS1andTime( T, path.phi( :, 1), C_f, Tq, path.phi( :, 1));
 end
 
 %{
