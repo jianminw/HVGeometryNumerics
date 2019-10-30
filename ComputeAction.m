@@ -22,15 +22,15 @@ function Action = ComputeAction(Path, config)
 % Changing to one directional finite differences because of suspected
 % parasitic modes
 
-n = size(oldPath.f, 1);
+n = size(Path.f, 1);
 DeltaX = 1 / n;
 
 Dx = circshift( eye(n), -1) - eye(n);
 Dx = Dx / DeltaX ;
 Dxx = Dx * (-Dx');
 
-vx = Dx * v;
-vxx = Dxx * v;
+vx = Dx * Path.v;
+vxx = Dxx * Path.v;
 
 newZ = ComputeZFromFV(Path);
 
