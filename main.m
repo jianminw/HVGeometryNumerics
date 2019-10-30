@@ -84,8 +84,8 @@ scaling = 1;
 f1 = scaling * f1;
 f0 = scaling * f0;
 
-%path = NumericalScheme( f0, f1, config );
-path = multiscaleScheme( f0, f1, mConfig );
+path = NumericalScheme( f0, f1, config );
+%path = multiscaleScheme( f0, f1, mConfig );
 
 % plotting
 [n, m] = size(path.f);

@@ -2,3 +2,5 @@
 *.asv
 # ignore figures saved
 *.fig
+# ignore data files
+*.mat

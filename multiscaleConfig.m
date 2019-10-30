@@ -8,5 +8,5 @@ mConfig.maxIterations = [5, 5, 2];
 mConfig.spaceIntervals = [25, 100, 200];
 mConfig.timeSteps = [50, 200, 400];
 
-mConfig.odeScheme = [2, 2, 2];
+mConfig.odeScheme = [1, 1, 1];
 end

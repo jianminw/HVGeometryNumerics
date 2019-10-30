@@ -33,7 +33,7 @@ path = struct;
 path.f = LinearInterpolation( f0, f1, timeSteps);
 path.v = zeros(size(path.f, 1), timeSteps);
 path.z = (f1 - f0)' * ones(1, timeSteps); 
-disp(ComputeAction(path))
+disp(ComputeAction(path, config))
 bestPath = path;
 
 % Now iterate the scheme. 
@@ -58,20 +58,19 @@ for i = 1:maxIterations
     %disp(z)
     
     % check that the new Path is actually better than the old path
-    %disp(ComputeAction(path))
-    disp(ComputeAction(newPath))
-    action(i) = ComputeAction(newPath);
+    disp(ComputeAction(newPath, config))
+    action(i) = ComputeAction(newPath, config);
     %error(i) = CheckAdmissiblePath(newPath);
     
     if config.computeActionMidIteration
         midIterationAction(i) = newPath.midIterationAction;
     end
     
-    if ComputeAction(newPath) < ComputeAction(bestPath)
+    if ComputeAction(newPath, config) < ComputeAction(bestPath, config)
         bestPath = newPath;
     end
     
-    if ComputeAction(newPath) >= ComputeAction(path)
+    if ComputeAction(newPath, config) >= ComputeAction(path, config)
         % Then the process will have "converged". No more accuracy can
         % be gained due to the error in the discretization/scheme. 
         

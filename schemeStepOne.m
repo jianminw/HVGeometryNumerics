@@ -1,7 +1,7 @@
 % Breaking down the parts of the scheme for ease of use in the Multiscale
 % case. 
 
-function [v, ft, fx] = schemeStepOne(oldPath)
+function [v, ft, fx] = schemeStepOne(oldPath, config)
 
 % size is NOT taken from the config because the number of timesteps can be
 % increased throughout the numerical scheme. 
@@ -41,7 +41,9 @@ ft = oldPath.f * Dt;
 
 v = zeros(n, m);
 for j = 1:m
-    A = - Dx * (- Dx') + eye(n) + eye(n) .* ( fx(:, j) .* fx(:, j) ) ;
+    D2 = config.lambda * Dx * (- Dx');
+    D4 = config.epsilon * D2 * D2;
+    A = - D2 - D4 + eye(n) + eye(n) .* ( fx(:, j) .* fx(:, j) ) ;
     b = - fx(:, j) .* ft(:, j);
     v(:, j) = A \ b;
     %[result, ~, ~, ~] = pcg(A, b);

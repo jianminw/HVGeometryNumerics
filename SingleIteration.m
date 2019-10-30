@@ -17,7 +17,7 @@
 
 function newPath = SingleIteration(oldPath, f0, f1, iteration, config)
 
-[v, ft, fx] = schemeStepOne(oldPath);
+[v, ft, fx] = schemeStepOne(oldPath, config);
 
 % If set in config, compute z for the above f and v to track the action
 % within the iteration. 
@@ -30,7 +30,7 @@ if config.computeActionMidIteration
     midIterationPath.f = oldPath.f;
     midIterationPath.v = v;
     midIterationPath.z = z;
-    newPath.midIterationAction = ComputeAction(midIterationPath);
+    newPath.midIterationAction = ComputeAction(midIterationPath, config);
 end
 
 [f, phi] = schemeStepTwo(v, f0, f1, config);

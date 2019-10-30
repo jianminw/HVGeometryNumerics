@@ -7,7 +7,7 @@
 % OUTPUTS:
 % Action - a number, the action associated with the path inputted. 
 
-function Action = ComputeAction(Path)
+function Action = ComputeAction(Path, config)
 
 % compute vx, and take L2 norms. 
 
@@ -22,15 +22,22 @@ function Action = ComputeAction(Path)
 % Changing to one directional finite differences because of suspected
 % parasitic modes
 
-vdiff = circshift(Path.v, -1) - Path.v;
-%vdiff = Path.v - circshift(Path.v, 1);
+n = size(oldPath.f, 1);
+DeltaX = 1 / n;
 
-vx = vdiff * size(Path.v, 1);% / 2;
+Dx = circshift( eye(n), -1) - eye(n);
+Dx = Dx / DeltaX ;
+Dxx = Dx * (-Dx');
+
+vx = Dx * v;
+vxx = Dxx * v;
 
 newZ = ComputeZFromFV(Path);
 
 %Action = L2Squared(Path.v) + L2Squared(Path.z) + L2Squared(vx);
-Action = L2Squared(Path.v) + L2Squared(newZ) + L2Squared(vx);
+Action = L2Squared(Path.v) + L2Squared(newZ);
+Action = Action + config.lambda * L2Squared(vx);
+Action = Action + config.epsilon * L2Squared(vxx);
 %disp(L2(Path.v))
 %disp(L2(Path.z))
 %disp(L2(vx))
