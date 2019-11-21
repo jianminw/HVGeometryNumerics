@@ -23,8 +23,8 @@ function config = options()
     config.epsilon = 0.1;
     
     % Constants related to the scheme. 
-    config.maxIterations = 10;
+    config.maxIterations = 1;
     config.spaceIntervals = 50;
-    config.timeSteps = 200;
+    config.timeSteps = 100;
     
 end
